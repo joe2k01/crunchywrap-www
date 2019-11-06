@@ -22,6 +22,7 @@
         </nav>
         <div class="sakura"></div>
         <script src="js/sticky-navbar.js"></script>
+        <script src="js/show-hide.js"></script>
     </header>
 
     <div id="info" class="content">
@@ -39,6 +40,155 @@
                 APIs, this whole project
                 was intended as a way to practice my Android development skills.</li>
         </ul>
+    </div>
+
+    <div id="doc" class="content">
+        <h2>How does this work?</h2>
+        <p>
+            The main goal of the app is to obtain direct links to the episodes <a
+                href="https://en.wikipedia.org/wiki/M3U#File_format">.m3u8 files</a>.
+            All the source code is available at <a href="https://github.com/joe2k01/CrunchyWrap">Github</a> and the
+            class responsible for the API calls
+            is named <a
+                href="https://github.com/joe2k01/CrunchyWrap/blob/master/app/src/main/java/io/github/joe2k01/crunchywrap/ApiCalls.kt">ApiCalls.kt</a>
+            <br>
+            <h3>Authentication</h3>
+            <div id="auth" class="doc_paragraph">
+                The first step to achieve our goal is to start a session on the CrunchyRoll's server, which is
+                done by a simple POST request to a particular adress: <a
+                    href="https://api.crunchyroll.com/start_session.0.json">https://api.crunchyroll.com/start_session.0.json</a>
+                <br>
+                All the requests made by the app are posted to the same CrunchyRoll server (<a
+                    href="https://api.crunchyroll.com">https://api.crunchyroll.com</a>),
+                what changes is the last part of the request, for example when starting a new session it is
+                start_session.0.json.
+                <br>
+                <br>
+                Anyway, that API url is pink and you clicked on it. Unluckily you had been redirected to a
+                "bad_auth_params"
+                page, how dare you CrunchyRoll! That
+                is because you need to attach a few parameters before posting any request. In the case of a new session
+                request the required params to attach
+                are:
+                <ul>
+                    <li>device_id: An id that represent the current device.</li>
+                    <li>device_type: The app uses "com.crunchyroll.crunchyroid" as the value for this parameter. Is the
+                        same
+                        value used by the official app.</li>
+                    <li>access_token: The token needed to authenticate on the server. I have got this value from <a
+                            href="https://github.com/streamlink/streamlink">streamlink.</a></li>
+                    <li>version: I assume this is their internal version of the app or something like that. Obtained
+                        from
+                        streamlink as the above value.</li>
+                </ul>
+                After posting the request, as a response we get a json file from which we obtain the session_id
+                parameter
+                that we will need to attach to every request from now on.
+                Now that we obtained a session_id we can access pretty much every part of the API, taking advantage of
+                that
+                the app is able to list the "newest" animes available,
+                retrieve information about any anime, which include the description of it and the available episodes.
+                And of
+                course the app is able to obtain a direct link to the playlist files.
+            </div>
+            <button id="auth_btn" onclick="showHide('auth', 'auth_btn')">Show</button>
+            <br>
+            <h3>List new animes</h3>
+            <div id="list" class="doc_paragraph">
+                To list the new animes the app posts a request to <a
+                    href="https://api.crunchyroll.com/list_series.0.json">https://api.crunchyroll.com/list_series.0.json</a>
+                and it
+                attaches a few more parameters:
+                <ul>
+                    <li>session_id: The id of the session, obtained with the previous call.</li>
+                    <li>media_type: CrunchyRoll does not offer only anime, so the app specifies "anime".</li>
+                    <li>limit: How many animes we want to know about, the app specifies "10".</li>
+                </ul>
+                As a response the app obtains a json files from which it extrapolates different data:
+                <ul>
+                    <li>name: The title of every single anime.</li>
+                    <li>series_id: The id of the anime. It will later be used to list the episodes or to obtain
+                        information
+                        about the anime if added to the liked list.</li>
+                    <li>description: The description of the anime.</li>
+                    <li>portrait_image: The url of the small preview image shown in the newest section of the app.</li>
+                    <li>landscape_image: The url of the wide preview image shown in the anime specific section of the
+                        app.
+                    </li>
+                </ul>
+                The images are available in various resolutions, the app obtains the one marked by the "full_url" item.
+            </div>
+            <button id="list_btn" onclick="showHide('list', 'list_btn')">Show</button>
+            <br>
+            <h3>Obtain information about a particular anime</h3>
+            <div id="anime" class="doc_paragraph">
+                To obtain information about a particular anime the app posts a request to <a
+                    href="https://api.crunchyroll.com/info.0.json">https://api.crunchyroll.com/info.0.json
+                </a> and it attaches the following parameters:
+                <ul>
+                    <li>session_id: The id of the session, obtained with the previous start_session call.</li>
+                    <li>series_id: The id of the anime we want to obtain information of.</li>
+                </ul>
+                This call will obtain as a response the same as above, strictly related to the one anime we are
+                interested
+                in.
+            </div>
+            <button id="anime_btn" onclick="showHide('anime', 'anime_btn')">Show</button>
+            <br>
+            <h3>Search an anime</h3>
+            <div id="search" class="doc_paragraph">
+                To search an anime all over CrunchyRoll's catalogue the app posts a request to <a
+                    href="https://api.crunchyroll.com/autocomplete.0.json">https://api.crunchyroll.com/autocomplete.0.json</a>
+                and it attaches the following parameters:
+                <ul>
+                    <li>session_id: The id of the session, obtained with the previous start_session call.</li>
+                    <li>media_type: CrunchyRoll does not offer only anime, so the app specifies "anime".</li>
+                    <li>q: The search query; e.g. "Re Zero"</li>
+                </ul>
+            </div>
+            <button id="search_btn" onclick="showHide('search', 'search_btn')">Show</button>
+            <br>
+            <h3>Obtain information about the episodes of an anime</h3>
+            <div id="episode" class="doc_paragraph">
+                To obtain information about the episodes the app posts a request to <a
+                    href="https://api.crunchyroll.com/list_media.0.json">https://api.crunchyroll.com/list_media.0.json</a>
+                and it attaches the following parameters:
+                <ul>
+                    <li>session_id: The id of the session, obtained with the previous start_session call.</li>
+                    <li>series_id: The id of the anime's episodes we want to obtain information of.</li>
+                    <li>limit: How many episodes we want to know about, the app specifies
+                        <code>Int.MAX_VALUE.toString()</code>.</li>
+                </ul>
+                As a response the app obtains a json files from which it extrapolates different data:
+                <ul>
+                    <li>name: The title of the episode.</li>
+                    <li>episode_number: The number of the episode, can also contain a letter such as 1A and 1B.</li>
+                    <li>media_id: The id of the episode, will later be useful to obtain the streaming URL.</li>
+                    <li>screenshot_image: The url of a preview image of the episode.</li>
+                </ul>
+                The preview is available in various resolutions, the app obtains the one marked by the "large_url" item.
+            </div>
+            <button id="episode_btn" onclick="showHide('episode', 'episode_btn')">Show</button>
+            <br>
+            <h3>Obtain a streaming link</h3>
+            <div id="stream" class="doc_paragraph">
+                To obtain the streaming link of an episode the app posts a request to <a
+                    href="https://api.crunchyroll.com/info.0.json">https://api.crunchyroll.com/info.0.json</a>
+                and it attaches the following parameters:
+                <ul>
+                    <li>session_id: The id of the session, obtained with the previous start_session call.</li>
+                    <li>media_id: The id of the episode</li>
+                    <li>fields: Special parameter passed to obtain the streaming link, the value passed is
+                        "media.stream_data". Obtained from streamlink</li>
+                </ul>
+                As a response thhe app obtains a json file from which it extracts the "stream_data" object, then it
+                extracts
+                the json array "streams" and picking the first item of the array (the adaptive stream) it obtains the
+                "url"
+                string.
+            </div>
+            <button id="stream_btn" onclick="showHide('stream', 'stream_btn')">Show</button>
+        </p>
     </div>
 </body>
 

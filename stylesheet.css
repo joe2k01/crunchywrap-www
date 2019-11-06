@@ -86,6 +86,12 @@ h2 {
     text-shadow: 0 0 5px #f0668f;
 }
 
+h3 {
+    color: white;
+    text-shadow: 0 0 5px #f0668f;
+    margin-bottom: 0;
+}
+
 div ul {
     padding-left: 1.2em;
     text-indent: -1.2em;
@@ -104,6 +110,20 @@ div li::before {
     width: 1.2em;
 }
 
+a {
+    color: #f0668f;
+}
+
+button {
+    color: white;
+    background-color: #f0668fad;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 25px;
+    border-color: #f0668f;
+    margin-top: 5px;
+}
+
 .content {
     margin: 0px 80px 0 80px;
     font-size: large;
@@ -111,10 +131,11 @@ div li::before {
     border-width: 2px;
     border-radius: 25px;
     border-color: #f0668f;
-    margin: 0 20% 0 20%;
+    margin: 0 20% 5% 20%;
     padding: 0 20px 0 20px;
+    color: rgb(202, 202, 202);
 }
 
-#info {
-    margin-bottom: 20%;
+.doc_paragraph {
+    display: none;
 }
