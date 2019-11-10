@@ -43,6 +43,10 @@ nav li {
     margin-right: 30px;
 }
 
+.mobile {
+    display: none;
+}
+
 .sticky {
     position: fixed;
     top: 0;
@@ -78,6 +82,7 @@ nav li {
     background-size: 100%;
     background-position: center;
     filter: blur(2px);
+    background-repeat: no-repeat;
 }
 
 h2 {
@@ -143,4 +148,56 @@ button {
 .download_button {
     padding: 10px;
     margin: 30px 0 0 0;
+}
+
+@media screen and (max-width: 710px) {
+    header {
+        height: 250px;
+    }
+
+    .logo {
+        background-size: 125px;
+        height: 125px;
+        width: 125px;
+    }
+
+    .sakura {
+        height: 250px;
+    }
+}
+
+@media screen and (max-width: 595px) {
+    header {
+        height: 200px;
+    }
+
+    .logo {
+        background-size: 100px;
+        height: 100px;
+        width: 100px;
+        top: -45px;
+    }
+
+    .sakura {
+        height: 215px;
+    }
+
+    .content {
+        font-size: large;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 25px;
+        border-color: #f0668f;
+        margin: 0 20px 50px 20px;
+        padding: 0 20px 0 20px;
+        color: rgb(202, 202, 202);
+    }
+
+    .mobile {
+        display: inline-block;
+    }
+
+    .desktop {
+        display: none;
+    }
 }
