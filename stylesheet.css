@@ -5,6 +5,13 @@ body {
     background: #424242;
 }
 
+.github-badge {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    transform: translate(-100%);
+}
+
 header {
     padding: 0;
     margin: 20px 0 20px 0;
